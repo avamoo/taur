@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Taur - The web subsitute for CherryTree</title>
+	<link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+	<script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+	<style>
+		.editor
+		{
+		    border:solid 10px #f4f4f4;
+		    padding: 20px;
+		    height: 100%;
+		}
+		.editor-toolbar
+		{
+		    border:solid 3px #f4f4f4;
+		    background:#f4f4f4;
+		    padding: 5px;
+		    border-radius:3px;
+		}
+
+		.editor-toolbar > span
+		{
+		    cursor:pointer;
+		}
+	</style>
+</head>
+<body>
+	<div class="container-fluid" style="height:100vh; overflow: auto;">
+		<nav class="navbar navbar-expand-lg bg-light">
+		  <div class="container-fluid">
+		    <a class="navbar-brand" href="#">Taur</a>
+		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		      <span class="navbar-toggler-icon"></span>
+		    </button>
+		    <div class="collapse navbar-collapse" id="navbarNav">
+		      <ul class="navbar-nav">
+		        <li class="nav-item">
+		          <a class="nav-link" aria-current="page" href="#">home</a>
+		        </li>
+		        <li class="nav-item">
+		          <a class="nav-link active" href="#">editor</a>
+		        </li>
+		        <li class="nav-item">
+		          <a class="nav-link" href="about">about</a>
+		        </li>
+		      </ul>
+		    </div>
+		  </div>
+		</nav>
+		<div class="row my-4">
+			<center>
+				<button type="button" id="add" class="btn btn-success" pys-onClick="add"><b>&nbsp+&nbsp</b></button>
+				<button type="button" id="remove" class="btn btn-danger mx-4" pys-onClick="remove"><b>&nbsp-&nbsp</b></button>
+				<button type="button" id="folder-add" class="btn btn-primary" pys-onClick="folder_add">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" class="bi bi-folder-plus" viewBox="0 0 16 16">
+  <path d="m.5 3 .04.87a1.99 1.99 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2zm5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19c-.24 0-.47.042-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672z"/>
+  <path d="M13.5 10a.5.5 0 0 1 .5.5V12h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V13h-1.5a.5.5 0 0 1 0-1H13v-1.5a.5.5 0 0 1 .5-.5z"/>
+</svg>
+				</button>
+				<button type="button" id="folder-remove" class="btn btn-warning ml-4" pys-onClick="folder_remove">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" class="bi bi-folder-minus" viewBox="0 0 16 16">
+  <path d="m.5 3 .04.87a1.99 1.99 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2zm5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19c-.24 0-.47.042-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672z"/>
+  <path d="M11 11.5a.5.5 0 0 1 .5-.5h4a.5.5 0 1 1 0 1h-4a.5.5 0 0 1-.5-.5z"/>
+</svg>
+				</button>
+				<button type="button" id="remove" class="btn btn-dark mx-4" pys-onClick="remove"><span class="fa fa-file-signature fa-fw"></span></button>
+			</center>
+		</div>
+		<div class="row mt-2" style="height: 85%;">
+			<div class="col">
+				<div class="editor-toolbar">
+				    <a href="javascript:void(0)" onclick="format('bold')"><span class="fa fa-bold fa-fw"></span></a>
+				    <a href="javascript:void(0)" onclick="format('italic')"><span class="fa fa-italic fa-fw"></span></a>
+				    <a href="javascript:void(0)" onclick="format('insertunorderedlist')"><span class="fa fa-list fa-fw"></span></a>
+				    <a href="javascript:void(0)" onclick="setUrl()"><span class="fa fa-link fa-fw"></span></a>
+				    <a href="javascript:void(0)" onclick="setCode()"><span class="fa fa-code fa-fw"></span></a>
+				    <span><input id="txtFormatUrl" placeholder="URL" class="form-control mt-2" style="border: none"></span>
+				</div>
+				<div class="editor form-control" contenteditable="true"> 
+				</div>
+			</div>
+			<div class="col-2" style="/*border:solid 10px #f4f4f4;*/ height: 100%;"><div class="container mt-3" id="tree" style="white-space: pre-line;">
+			</div></div>
+		</div>
+	</div>
+	<py-script>
+from js import console
+
+folders = {}
+folderl = []
+files = {"Untitled File 1": [1, []]}
+filel = ["Untitled File 1"]
+tree = Element('tree').element
+def tree_set(listt):
+	tree.innerText = "\n".join(listt)
+
+def tree_add(item):
+	filel.append(item)
+	tree.innerText = f"{tree.innerText}{item}\n"
+
+tree_add("Untitled File 1")
+
+def tree_del(item):
+	filel.pop(filel.index(item))
+	tree_set(filel)
+
+def folder_add(*args, **kwargs):
+	console.log(f"Starting operation")
+	console.log(f"Found two values: args: {args}, kwargs: {kwargs}")
+	folder = f"Untitled Folder {len(folders) + 1}"
+	console.log(f"Adding folder ID, which is {len(folders) + 1}")
+	folders[folder] = [len(folders) + 1, []]
+	console.log(f"Successfully added folder {len(folders)}, continuing")
+
+def add(*args, **kwargs):
+	console.log(f"Starting operation")
+	console.log(f"Found two values: args: {args}, kwargs: {kwargs}")
+	file = f"Untitled File {len(files) + 1}"
+	console.log(f"Adding file ID, which is {len(files) + 1}")
+	files[file] = [len(files) + 1, []]
+	tree_add(file)
+	console.log(f"Successfully added file {len(files)}, continuing")
+
+def remove(*args, **kwargs):
+	console.log(f"Found two values: args: {args}, kwargs: {kwargs}")
+	file = prompt("What file would you like to remove?")
+	confirmed = confirm("Are you sure?")
+	if confirmed:
+		console.log("User confirmed deletion, deleting")
+		console.log(f"Deleted file ID {files[file][0]}")
+		tree_del_var = filel[filel.index(file)]
+		console.log(tree_del_var)
+		tree_del(tree_del_var)
+		del files[file]
+	else:
+		console.log("User didn't confirm deletion, continuing")
+
+def folder_remove(*args, **kwargs):
+	folder = prompt("What folder would you like to remove?")
+	confirmed = confirm("Are you sure? Deleting the folder will delete the files inside along with it.")
+	if confirmed:
+		console.log("User confirmed deletion, deleting")
+		console.log(f"Deleted folder ID {files[file][0]}")
+		del folders[folder]
+	else:
+		console.log("User didn't confirm deletion, continuing")
+	</py-script>
+	<script>
+		function format(command, value) {
+    		document.execCommand(command, false, value);
+ 		}
+
+ 		function setUrl() {
+			var url = document.getElementById('txtFormatUrl').value;
+			var sText = document.getSelection();
+			document.execCommand('insertHTML', false, '<a href="' + url + '">' + sText + '</a>');
+			document.getElementById('txtFormatUrl').value = '';
+		}
+
+ 		function setCode() {
+			var sText = document.getSelection();
+			document.execCommand('insertHTML', false, '<pre class="prettyprint"><code>' + sText + '</code></pre>');
+			document.getElementById('txtFormatUrl').value = '';
+		}
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+</body>
+</html>
