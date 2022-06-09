@@ -127,10 +127,10 @@ def add(*args, **kwargs):
 	console.log(f"Successfully added file {len(files)}, continuing")
 
 def remove(*args, **kwargs):
+	console.log("Starting operation")
 	console.log(f"Found two values: args: {args}, kwargs: {kwargs}")
 	file = prompt("What file would you like to remove?")
-	confirmed = confirm("Are you sure?")
-	if confirmed:
+	if confirm("Are you sure?"):
 		console.log("User confirmed deletion, deleting")
 		console.log(f"Deleted file ID {files[file][0]}")
 		tree_del_var = filel[filel.index(file)]
