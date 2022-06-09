@@ -97,7 +97,7 @@ files = {"Untitled File 1": [1, []]}
 filel = ["Untitled File 1"]
 tree = Element('tree').element
 def tree_set(listt):
-	tree.innerText = "\n".join(listt)
+	tree.innerText = "\n".join(listt) + "\n"
 
 def tree_add(item):
 	filel.append(item)
@@ -106,15 +106,19 @@ def tree_add(item):
 tree_add("Untitled File 1")
 
 def tree_del(item):
-	filel.pop(filel.index(item))
-	tree_set(filel)
+	tmp = "`".join(filel)
+	tree_set(tmp.split("`"))
+
+def tree_clear():
+	filel = []
+	tree_set("")
 
 def folder_add(*args, **kwargs):
 	console.log(f"Starting operation")
 	console.log(f"Found two values: args: {args}, kwargs: {kwargs}")
 	folder = f"Untitled Folder {len(folders) + 1}"
 	console.log(f"Adding folder ID, which is {len(folders) + 1}")
-	folders[folder] = [len(folders) + 1, []]
+	folders[folder] = [len(folders), []]
 	console.log(f"Successfully added folder {len(folders)}, continuing")
 
 def add(*args, **kwargs):
@@ -122,7 +126,7 @@ def add(*args, **kwargs):
 	console.log(f"Found two values: args: {args}, kwargs: {kwargs}")
 	file = f"Untitled File {len(files) + 1}"
 	console.log(f"Adding file ID, which is {len(files) + 1}")
-	files[file] = [len(files) + 1, []]
+	files[file] = [len(files), []]
 	tree_add(file)
 	console.log(f"Successfully added file {len(files)}, continuing")
 
@@ -134,8 +138,9 @@ def remove(*args, **kwargs):
 		console.log("User confirmed deletion, deleting")
 		console.log(f"Deleted file ID {files[file][0]}")
 		tree_del_var = filel[filel.index(file)]
-		console.log(tree_del_var)
+		filel.pop(int(filel[file][0]))
 		tree_del(tree_del_var)
+		console.log(f"File list: {filel}")
 		del files[file]
 	else:
 		console.log("User didn't confirm deletion, continuing")
